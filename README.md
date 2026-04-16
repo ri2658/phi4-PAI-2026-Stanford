@@ -75,7 +75,7 @@ Results are saved to CSV for further analysis.
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit issues, feature requests, or pull requests.
+Contributions are always welcome! Please feel free to submit issues, feature requests, or pull requests.
 
 ## License
 
