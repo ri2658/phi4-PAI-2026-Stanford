@@ -14,7 +14,7 @@ The code performs systematic experiments across different coupling strengths (λ
 - **Generative Models**:
   - Fourier Representation for spectral domain modeling
   - PCA-based dimensionality reduction
-  - Full Gaussian approximation as baseline
+  - Full Gaussian approximation as baseline 
 - **Evaluation Metrics**:
   - Correlation function errors (local and global ranges)
   - Power spectrum L² relative errors
