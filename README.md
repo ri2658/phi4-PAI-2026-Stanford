@@ -25,7 +25,7 @@ The code performs systematic experiments across different coupling strengths (λ
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/phi4-PAI-2026-Stanford.git
+   git clone https://github.com/ri2658/phi4-PAI-2026-Stanford.git
    cd phi4-PAI-2026-Stanford
    ```
 
