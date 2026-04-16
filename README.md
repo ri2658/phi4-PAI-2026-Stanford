@@ -1,6 +1,6 @@
-# φ⁴ Theory Generative Modeling with AI
+# When Independent Gaussian Models Break Down: Characterizing Regime-Dependent Modeling Failures in φ⁴ Theory 
 
-This project implements generative machine learning models for the φ⁴ scalar field theory in lattice quantum field theory. It uses Metropolis-Hastings Markov Chain Monte Carlo (MCMC) to generate ground truth samples and trains various generative models (Fourier Neural Networks, Principal Component Analysis, and Full Gaussian approximations) to learn the distribution.
+This project implements generative machine learning models for the φ⁴ scalar field theory in lattice quantum field theory. It uses Metropolis-Hastings Markov Chain Monte Carlo (MCMC) to generate ground truth samples and uses various methods (Fourier Representations, Principal Component Analysis, and Full Gaussian approximations) to represent  the distribution.
 
 ## Overview
 
@@ -12,7 +12,7 @@ The code performs systematic experiments across different coupling strengths (λ
 
 - **MCMC Sampling**: Metropolis-Hastings algorithm for generating φ⁴ field configurations
 - **Generative Models**:
-  - Fourier Neural Networks for spectral domain modeling
+  - Fourier Representation for spectral domain modeling
   - PCA-based dimensionality reduction
   - Full Gaussian approximation as baseline
 - **Evaluation Metrics**:
@@ -66,7 +66,7 @@ python main.py --lams 0.1 1.0 5.0 --Ns 32 64 128 --seeds 0 1 2 --num_fourier_blo
 │   ├── gaussianity_metrics.py  # Gaussianity analysis
 │   └── metropolis_hastings_mcmc.py  # MCMC sampling implementation
 ├── models/
-│   ├── fourier.py          # Fourier neural network model
+│   ├── fourier.py          # Fourier model
 │   ├── full_gaussian.py    # Gaussian baseline model
 │   └── pca.py              # PCA-based model
 ├── plotting/
@@ -74,7 +74,7 @@ python main.py --lams 0.1 1.0 5.0 --Ns 32 64 128 --seeds 0 1 2 --num_fourier_blo
 ├── training/
 │   └── training_loop.py    # Training and evaluation logic
 ├── LICENSE                 # MIT License
-└── README.md              # This file
+└── README.md               # This file
 ```
 
 ## Results and Analysis
