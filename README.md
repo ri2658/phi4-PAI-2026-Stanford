@@ -21,20 +21,6 @@ The code performs systematic experiments across different coupling strengths (λ
 - **Comprehensive Analysis**: Scaling laws, gaussianity metrics, and visualization tools
 - **Experiment Management**: CSV-based result tracking and resumable experiments
 
-## Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/ri2658/phi4-PAI-2026-Stanford.git
-   cd phi4-PAI-2026-Stanford
-   ```
-
-2. Install dependencies:
-   ```bash
-   pip install numpy pandas matplotlib scipy torch
-   ```
-   (Add other dependencies as needed based on your environment)
-
 ## Usage
 
 Run the full experiment suite:
