@@ -80,8 +80,3 @@ Contributions are always welcome! Please feel free to submit issues, feature req
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-
-## Acknowledgments
-
-This work was developed for 2026 Conference on Physics and AI (PAI26) at Stanford University, 2026.
