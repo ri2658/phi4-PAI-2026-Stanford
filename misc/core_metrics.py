@@ -63,3 +63,20 @@ def fourier_mode_coupling_normalized(samples):
         return np.linalg.norm(off, ord='fro') / (np.linalg.norm(mat, ord='fro') + 1e-12)
 
     return normalized_ratio(cov_re), normalized_ratio(cov_im)
+
+def spectrum_rel_error(ps_model, ps_ref, eps=1e-12):
+    return float(np.sum(np.abs(ps_model - ps_ref)) / (np.sum(ps_ref) + eps))
+
+def coupling_metric(samples):
+    fft   = np.fft.rfft(samples, axis=1)
+    E     = np.abs(fft) ** 2
+    Sigma = np.cov(E.T)
+    off   = Sigma - np.diag(np.diag(Sigma))
+    return float(np.linalg.norm(off, 'fro') / (np.linalg.norm(Sigma, 'fro') + 1e-12))
+
+def coupling_metric(samples):
+    fft   = np.fft.rfft(samples, axis=1)
+    E     = np.abs(fft) ** 2
+    Sigma = np.cov(E.T)
+    off   = Sigma - np.diag(np.diag(Sigma))
+    return float(np.linalg.norm(off, 'fro') / (np.linalg.norm(Sigma, 'fro') + 1e-12))

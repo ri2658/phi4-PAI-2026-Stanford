@@ -1,12 +1,14 @@
-from ..misc.metropolis_hastings_mcmc import metropolis_mcmc_scalar
-from ..misc.gaussianity_metrics import *
-from ..misc.core_metrics import *
-from ..models.fourier import *
-from ..models.full_gaussian import *
-from ..models.pca import *
+from misc.metropolis_hastings_mcmc import metropolis_mcmc_scalar
+from misc.gaussianity_metrics import *
+from misc.core_metrics import *
+from models.fourier import *
+from models.full_gaussian import *
+from models.pca import *
+from models.maf import *
 
 import time
 import pandas as pd
+import numpy as np
 
 def train_test_split_samples(samples, train_frac=0.75):
     n = samples.shape[0]
@@ -36,6 +38,92 @@ def get_sim_params(N):
     if N == 96:
         return 3000, 3000, 12, 0.27
     return 2500, 3000, 12, 0.25
+
+
+def regime(C):
+    if C < 0.07:
+        return 'weak'
+    elif C < 0.17:
+        return 'intermediate'
+    else:
+        return 'strong'
+
+
+def run_one_flow_experiment(N, lam, seed, n_epochs=400, lr=5e-4, batch_size=512, n_layers=4, hidden_dim=64):
+    n_samples, burn_in, thin, step_size = get_sim_params(N)
+
+    ref, acc = metropolis_mcmc_scalar(
+        N=N, m=1.0, lam=lam,
+        n_samples=n_samples, burn_in=burn_in, thin=thin,
+        step_size=step_size, seed=seed
+    )
+
+    C_ref = coupling_metric(ref)
+    f_samp = fourier_baseline_samples(ref, seed=seed + 999)
+    C_fourier = coupling_metric(f_samp)
+    err_fourier_spec = spectrum_rel_error(power_spectrum(f_samp), power_spectrum(ref))
+
+    flow, mu, std, n_modes = train_flow(
+        ref, n_epochs=n_epochs, lr=lr,
+        batch_size=batch_size, n_layers=n_layers,
+        hidden_dim=hidden_dim
+    )
+    fl_samp = sample_flow(flow, mu, std, n_modes, N, len(ref))
+    C_flow = coupling_metric(fl_samp)
+    err_flow_spec = spectrum_rel_error(power_spectrum(fl_samp), power_spectrum(ref))
+
+    return {
+        'N': N,
+        'lam': lam,
+        'seed': seed,
+        'acceptance': acc,
+        'C_ref': C_ref,
+        'C_fourier': C_fourier,
+        'C_flow': C_flow,
+        'err_C_fourier': abs(C_fourier - C_ref),
+        'err_C_flow': abs(C_flow - C_ref),
+        'err_spec_fourier': err_fourier_spec,
+        'err_spec_flow': err_flow_spec,
+    }
+
+
+def run_flow_experiment(lams=(0.1, 5.0, 10.0, 20.0, 100.0), Ns=(64, 96), seeds=(0, 1), csv_path="/content/flow_results_coupling.csv", n_epochs=400, lr=5e-4, batch_size=512, n_layers=4, hidden_dim=64):
+    rows = []
+    t0 = time.time()
+
+    for lam in lams:
+        for N in Ns:
+            for seed in seeds:
+                print(f"N={N}, λ={lam}, seed={seed} ... ", end='', flush=True)
+                row = run_one_flow_experiment(
+                    N=N, lam=lam, seed=seed,
+                    n_epochs=n_epochs, lr=lr,
+                    batch_size=batch_size,
+                    n_layers=n_layers, hidden_dim=hidden_dim
+                )
+                rows.append(row)
+                print(f"C_ref={row['C_ref']:.3f}  C_fourier={row['C_fourier']:.3f}  C_flow={row['C_flow']:.3f}  ({time.time()-t0:.0f}s)")
+
+    df = pd.DataFrame(rows)
+    df.to_csv(csv_path, index=False)
+    print(f"\nSaved to {csv_path}")
+    return df
+
+
+def print_flow_summary(df):
+    df = df.copy()
+    df['regime'] = df['C_ref'].apply(regime)
+    agg = df.groupby('regime').agg(
+        C_ref=('C_ref', 'mean'),
+        C_fourier=('C_fourier', 'mean'),
+        C_flow=('C_flow', 'mean'),
+        err_C_fourier=('err_C_fourier', 'mean'),
+        err_C_flow=('err_C_flow', 'mean')
+    ).round(4)
+    print("\nCoupling recovery by regime:")
+    print(agg.to_string())
+    return agg
+
 
 def run_one_experiment(N, lam, seed, num_fourier_blocks=4):
     n_samples, burn_in, thin, step_size = get_sim_params(N)

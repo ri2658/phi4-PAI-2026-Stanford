@@ -18,6 +18,7 @@ The code performs systematic experiments across different coupling strengths (λ
 - **Evaluation Metrics**:
   - Correlation function errors (local and global ranges)
   - Power spectrum L² relative errors
+  - Coupling recovery and MAF flow evaluation against Fourier baselines
 - **Comprehensive Analysis**: Scaling laws, gaussianity metrics, and visualization tools
 - **Experiment Management**: CSV-based result tracking and resumable experiments
 
@@ -31,7 +32,7 @@ The code performs systematic experiments across different coupling strengths (λ
 
 2. Install dependencies:
    ```bash
-   pip install numpy pandas matplotlib scipy torch
+   pip install numpy pandas matplotlib scipy torch nflows
    ```
    (Add other dependencies as needed based on your environment)
 
@@ -43,7 +44,19 @@ Run the full experiment suite:
 python main.py
 ```
 
-Customize parameters:
+Run the flow coupling experiment via the main runner:
+
+```bash
+python main.py --run_flow_experiment
+```
+
+Alternatively, run the dedicated flow experiment script directly:
+
+```bash
+python training/maf_exp.py
+```
+
+Customize parameters for the main experiment:
 
 ```bash
 python main.py --lams 0.1 1.0 5.0 --Ns 32 64 128 --seeds 0 1 2 --num_fourier_blocks 4
@@ -56,6 +69,13 @@ python main.py --lams 0.1 1.0 5.0 --Ns 32 64 128 --seeds 0 1 2 --num_fourier_blo
 - `--seeds`: Random seeds for reproducibility (default: [0, 1, 2])
 - `--csv_path`: Path for saving/loading experiment results (default: "/content/full_experiment.csv")
 - `--num_fourier_blocks`: Number of Fourier neural network blocks (default: 4)
+- `--run_flow_experiment`: Run the masked autoregressive flow coupling experiment (default: false)
+- `--flow_csv_path`: Path for saving/loading the flow experiment CSV file (default: "/content/flow_results_coupling.csv")
+- `--flow_n_epochs`: Number of flow training epochs (default: 400)
+- `--flow_lr`: Learning rate for flow training (default: 5e-4)
+- `--flow_batch_size`: Batch size for flow training (default: 512)
+- `--flow_n_layers`: Number of flow layers (default: 4)
+- `--flow_hidden_dim`: Hidden dimension in flow layers (default: 64)
 
 ## Project Structure
 
@@ -72,7 +92,8 @@ python main.py --lams 0.1 1.0 5.0 --Ns 32 64 128 --seeds 0 1 2 --num_fourier_blo
 ├── plotting/
 │   └── plotting.py         # Visualization functions
 ├── training/
-│   └── training_loop.py    # Training and evaluation logic
+│   ├── training_loop.py    # Training and evaluation logic
+│   └── maf_exp.py          # Direct flow experiment script
 ├── LICENSE                 # MIT License
 └── README.md              # This file
 ```
