@@ -1,6 +1,6 @@
-# When Independent Gaussian Models Break Down: Characterizing Regime-Dependent Modeling Failures in φ⁴ Theory 
+# φ⁴ Theory Generative Modeling with AI
 
-This project implements generative machine learning models for the φ⁴ scalar field theory in lattice quantum field theory. It uses Metropolis-Hastings Markov Chain Monte Carlo (MCMC) to generate ground truth samples and uses various methods (Fourier Representations, Principal Component Analysis, and Full Gaussian approximations) to represent  the distribution.
+This project implements generative machine learning models for the φ⁴ scalar field theory in lattice quantum field theory. It uses Metropolis-Hastings Markov Chain Monte Carlo (MCMC) to generate ground truth samples and trains various generative models (Fourier Neural Networks, Principal Component Analysis, and Full Gaussian approximations) to learn the distribution.
 
 ## Overview
 
@@ -12,14 +12,29 @@ The code performs systematic experiments across different coupling strengths (λ
 
 - **MCMC Sampling**: Metropolis-Hastings algorithm for generating φ⁴ field configurations
 - **Generative Models**:
-  - Fourier Representation for spectral domain modeling
+  - Fourier Neural Networks for spectral domain modeling
   - PCA-based dimensionality reduction
-  - Full Gaussian approximation as baseline 
+  - Full Gaussian approximation as baseline
 - **Evaluation Metrics**:
   - Correlation function errors (local and global ranges)
   - Power spectrum L² relative errors
+  - Coupling recovery and MAF flow evaluation against Fourier baselines
 - **Comprehensive Analysis**: Scaling laws, gaussianity metrics, and visualization tools
 - **Experiment Management**: CSV-based result tracking and resumable experiments
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/phi4-PAI-2026-Stanford.git
+   cd phi4-PAI-2026-Stanford
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install numpy pandas matplotlib scipy torch nflows
+   ```
+   (Add other dependencies as needed based on your environment)
 
 ## Usage
 
@@ -29,7 +44,19 @@ Run the full experiment suite:
 python main.py
 ```
 
-Customize parameters:
+Run the flow coupling experiment via the main runner:
+
+```bash
+python main.py --run_flow_experiment
+```
+
+Alternatively, run the dedicated flow experiment script directly:
+
+```bash
+python training/maf_exp.py
+```
+
+Customize parameters for the main experiment:
 
 ```bash
 python main.py --lams 0.1 1.0 5.0 --Ns 32 64 128 --seeds 0 1 2 --num_fourier_blocks 4
@@ -42,6 +69,13 @@ python main.py --lams 0.1 1.0 5.0 --Ns 32 64 128 --seeds 0 1 2 --num_fourier_blo
 - `--seeds`: Random seeds for reproducibility (default: [0, 1, 2])
 - `--csv_path`: Path for saving/loading experiment results (default: "/content/full_experiment.csv")
 - `--num_fourier_blocks`: Number of Fourier neural network blocks (default: 4)
+- `--run_flow_experiment`: Run the masked autoregressive flow coupling experiment (default: false)
+- `--flow_csv_path`: Path for saving/loading the flow experiment CSV file (default: "/content/flow_results_coupling.csv")
+- `--flow_n_epochs`: Number of flow training epochs (default: 400)
+- `--flow_lr`: Learning rate for flow training (default: 5e-4)
+- `--flow_batch_size`: Batch size for flow training (default: 512)
+- `--flow_n_layers`: Number of flow layers (default: 4)
+- `--flow_hidden_dim`: Hidden dimension in flow layers (default: 64)
 
 ## Project Structure
 
@@ -52,15 +86,16 @@ python main.py --lams 0.1 1.0 5.0 --Ns 32 64 128 --seeds 0 1 2 --num_fourier_blo
 │   ├── gaussianity_metrics.py  # Gaussianity analysis
 │   └── metropolis_hastings_mcmc.py  # MCMC sampling implementation
 ├── models/
-│   ├── fourier.py          # Fourier model
+│   ├── fourier.py          # Fourier neural network model
 │   ├── full_gaussian.py    # Gaussian baseline model
 │   └── pca.py              # PCA-based model
 ├── plotting/
 │   └── plotting.py         # Visualization functions
 ├── training/
-│   └── training_loop.py    # Training and evaluation logic
+│   ├── training_loop.py    # Training and evaluation logic
+│   └── maf_exp.py          # Direct flow experiment script
 ├── LICENSE                 # MIT License
-└── README.md               # This file
+└── README.md              # This file
 ```
 
 ## Results and Analysis
@@ -75,8 +110,18 @@ Results are saved to CSV for further analysis.
 
 ## Contributing
 
-Contributions are always welcome! Please feel free to submit issues, feature requests, or pull requests.
+Contributions are welcome! Please feel free to submit issues, feature requests, or pull requests.
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Authors
+
+- Ryo I.
+- Anish B.
+- Zihan Z.
+
+## Acknowledgments
+
+This work was developed for 2026 Conference on Physics and AI (PAI26) at Stanford University, 2026.
