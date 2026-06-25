@@ -1,4 +1,4 @@
-# φ⁴ Theory Generative Modeling with AI
+# When Independent Gaussian Models Break Down: Characterizing Regime-Dependent Modeling Failures in $\phi^4$ Theory: Official Repository
 
 This project implements generative machine learning models for the φ⁴ scalar field theory in lattice quantum field theory. It uses Metropolis-Hastings Markov Chain Monte Carlo (MCMC) to generate ground truth samples and trains various generative models (Fourier Neural Networks, Principal Component Analysis, and Full Gaussian approximations) to learn the distribution.
 
