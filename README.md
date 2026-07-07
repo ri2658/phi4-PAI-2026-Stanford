@@ -22,6 +22,24 @@ The code performs systematic experiments across different coupling strengths (λ
 - **Comprehensive Analysis**: Scaling laws, gaussianity metrics, and visualization tools
 - **Experiment Management**: CSV-based result tracking and resumable experiments
 
+## Coupling diagnostic → `couplnorm`
+
+The normalized fourth-order coupling metric **C** used here — the covariance of
+spectral energies `E_k = |φ̃_k|²` reduced to `‖Σ − diag(Σ)‖_F / ‖Σ‖_F` — is
+packaged as a standalone, tested PyTorch library:
+**[couplnorm](https://github.com/anishbhat28/couplnorm)**
+(`CouplingMetric`, `CouplingLoss`, `coupling_from_samples`). It computes the same
+number as `misc/core_metrics.coupling_metric` (verified to ~1e-8 on identical
+samples) and additionally exposes C as a differentiable training loss.
+
+**FFT convention (important).** C is computed on the `N//2 + 1` unique modes of
+the real FFT (`numpy.fft.rfft`). For a real field the full FFT is
+conjugate-symmetric (`|φ̃_k|² = |φ̃_{N−k}|²`), which would force `N − 2`
+off-diagonal covariance entries to equal diagonal ones and inflate C to a
+physics-independent floor of `√((N−2)/(2N−2)) ≈ 0.7`. Restricting to unique modes
+(as this code does) means the reported values (C ∈ [0.06, 0.2]) reflect genuine
+mode coupling rather than a symmetry artifact.
+
 ## Installation
 
 1. Clone the repository:

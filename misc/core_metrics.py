@@ -73,10 +73,3 @@ def coupling_metric(samples):
     Sigma = np.cov(E.T)
     off   = Sigma - np.diag(np.diag(Sigma))
     return float(np.linalg.norm(off, 'fro') / (np.linalg.norm(Sigma, 'fro') + 1e-12))
-
-def coupling_metric(samples):
-    fft   = np.fft.rfft(samples, axis=1)
-    E     = np.abs(fft) ** 2
-    Sigma = np.cov(E.T)
-    off   = Sigma - np.diag(np.diag(Sigma))
-    return float(np.linalg.norm(off, 'fro') / (np.linalg.norm(Sigma, 'fro') + 1e-12))
